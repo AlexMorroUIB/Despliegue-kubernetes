@@ -34,6 +34,10 @@ resource "kubernetes_deployment" "database" {
             name  = "MARIADB_ROOT_PASSWORD"
             value = var.db_password
           }
+          volume_mount {
+            name       = "init"
+            mount_path = "/docker-entrypoint-initdb.d"
+          }
         }
         container {
           image = "phpmyadmin:5"
@@ -50,15 +54,21 @@ resource "kubernetes_deployment" "database" {
             value = "3306"
           }
         }
-        /*volumes {
-  container_path = "/var/lib/mysql"
-  volume_name    = var.db-volume
-}
-# archivo init.sql para empezar con datos
-volumes {
-  host_path      = var.db-init-file
-  container_path = "/docker-entrypoint-initdb.d/init.sql"
-}*/
+        volume {
+          name = "init"
+          config_map {
+            name = var.db-init-file
+          }
+        }
+          /*volumes {
+    container_path = "/var/lib/mysql"
+    volume_name    = var.db-volume
+  }
+  # archivo init.sql para empezar con datos
+  volumes {
+    host_path      = var.db-init-file
+    container_path = "/docker-entrypoint-initdb.d/init.sql"
+  }*/
       }
     }
   }
@@ -67,6 +77,23 @@ volumes {
 resource "kubernetes_service" "database" {
   metadata {
     name      = "database"
+    namespace = var.db-namespace
+  }
+  spec {
+    selector = {
+      app = kubernetes_deployment.database.spec.0.template.0.metadata.0.labels.app
+    }
+    type = "NodePort"
+    port {
+      port        = 3306
+      target_port = 3306
+    }
+  }
+}
+
+resource "kubernetes_service" "phpmyadmin" {
+  metadata {
+    name      = "phpmyadmin"
     namespace = var.db-namespace
   }
   spec {

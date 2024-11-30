@@ -3,13 +3,6 @@ provider "kubernetes" {
   config_context = "minikube"
 }
 
-variable "db_user" {}
-variable "db_pass" {}
-variable "db_root_pass" {}
-variable "webapp_instances" {}
-variable "grafana_pass" {}
-
-
 /*
 # Variables definidas según el workspace
 locals {
@@ -20,7 +13,8 @@ locals {
 
 module "network" {
   source = "./modules/network"
-  db-service = module.database.db-service-name
+  phpmyadmin-service = module.database.phpmyadmin-service-name
+  db-namespace = kubernetes_namespace.database.metadata.0.name
 }
 
 module "database" {
@@ -31,9 +25,9 @@ module "database" {
   db-namespace = kubernetes_namespace.database.metadata.0.name
   #db-volume = docker_volume.db-volume.name
   db_password = var.db_root_pass
-  db-init-file = abspath("../conf-files/init.sql")
+  db-init-file = kubernetes_config_map.init-file.metadata.0.name
   phpmyadmin-port = 8081
- # depends_on = [ docker_volume.db-volume ]
+  depends_on = [ kubernetes_config_map.init-file ]
 }
 
 /*module "WebApp" {

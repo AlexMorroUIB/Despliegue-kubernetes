@@ -7,10 +7,7 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
 ![Diagrama de la infraestructura](./infraestructura-terraform.png)
 
 ## Despliegue de entornos
-Primero se deberían realizar las siguientes configuraciones.<br>
-Añadir los workspaces de dev y pro con los comandos:
-- `terraform workspace new dev`
-- `terraform workspace new pro`
+`minikube addons enable ingress`
 
 Un archivo `var.tfvars` para las variables de entorno con el siguiente contenido:
 ``` 

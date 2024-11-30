@@ -5,3 +5,7 @@ output "db-host" {
 output "db-service-name" {
   value = kubernetes_service.database.metadata.0.name
 }
+
+output "phpmyadmin-service-name" {
+  value = kubernetes_service.phpmyadmin.metadata.0.name
+}
