@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+spec:
+  ingressClassName: test
+  rules:
+  - host: local
+    http:
+      paths:
+      - path: /phpmyadmin
+        pathType: Prefix
+        backend:
+          service:
+            name: database
+            port:
+              number: 8081
