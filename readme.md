@@ -8,6 +8,8 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
 
 ## Despliegue de entornos
 `minikube addons enable ingress`
+En Linux añadir la ip del cluster `minikube ip` al archivo `/etc/hosts`, en MacOS no hace falta.
+Ejecutar el comando `minikube tinnel`
 
 Un archivo `var.tfvars` para las variables de entorno con el siguiente contenido:
 ``` 

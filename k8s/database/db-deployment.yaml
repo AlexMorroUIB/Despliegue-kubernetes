@@ -20,12 +20,19 @@ spec:
         env:
         - name: MARIADB_ROOT_PASSWORD
           value: secret
+        volumeMounts:
+        - name: init
+          mountPath: "/docker-entrypoint-initdb.d/init.sql"
       - name: phpmyadmin
         image: phpmyadmin:5
         ports:
-        - containerPort: 80 
+        - containerPort: 80
         env:
         - name: PMA_HOST
-          value: localhost
-        - name: PMA_PORT
-          value: "3306"
+          value: "127.0.0.1"
+    volumes:
+    - name: init
+      configMap:
+        name: db-configmap
+        items:
+        - key: "init-path"

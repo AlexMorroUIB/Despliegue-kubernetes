@@ -1,25 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
+  name: db-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
     - host: localhost
       http:
         paths:
-          - path: /web
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: webapp-service
-                port:
-                  number: 30000
           - path: /phpmyadmin
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: database-service
                 port:
                   number: 30001
-                  

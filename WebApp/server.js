@@ -4,7 +4,7 @@ const path = require('path')
 const http = require('http')
 const https = require('https')
 const fs = require('fs')
-const PORT = 443
+const PORT = 80
 const options = {
     key: fs.readFileSync("./ssl/cert.crt.key"),
     cert: fs.readFileSync("./ssl/cert.crt")
@@ -53,8 +53,8 @@ app.get('/getInstancia', (req, res) => {
     );
 });
 
-https.createServer(options, app).listen(PORT);
-//http.createServer(app).listen(PORT)
+//https.createServer(options, app).listen(PORT);
+http.createServer(app).listen(PORT)
 
 process.on('unhandledRejection', (error, promise) => {
     console.log(promise)
