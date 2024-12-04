@@ -22,7 +22,7 @@ spec:
           value: secret
         volumeMounts:
         - name: init
-          mountPath: "/docker-entrypoint-initdb.d/init.sql"
+          mountPath: "/docker-entrypoint-initdb.d"
       - name: phpmyadmin
         image: phpmyadmin:5
         ports:
@@ -30,9 +30,7 @@ spec:
         env:
         - name: PMA_HOST
           value: "127.0.0.1"
-    volumes:
-    - name: init
-      configMap:
-        name: db-configmap
-        items:
-        - key: "init-path"
+      volumes:
+      - name: init
+        configMap:
+          name: db-init-config

@@ -2,6 +2,14 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    #nginx.ingress.kubernetes.io/server-snippets: |
+    #  location / {
+    #    return 302 /phpmyadmin;
+    #  }
+    #nginx.org/location-snippets: |
+    #  add_header my-test-header test-value;
 spec:
   ingressClassName: nginx
   rules:
@@ -9,14 +17,14 @@ spec:
       http:
         paths:
           - path: /web
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: webapp-service
                 port:
                   number: 30000
           - path: /phpmyadmin
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: database-service

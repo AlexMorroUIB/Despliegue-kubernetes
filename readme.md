@@ -7,9 +7,15 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
 ![Diagrama de la infraestructura](./infraestructura-terraform.png)
 
 ## Despliegue de entornos
-`minikube addons enable ingress`
-En Linux añadir la ip del cluster `minikube ip` al archivo `/etc/hosts`, en MacOS no hace falta.
-Ejecutar el comando `minikube tinnel`
+1. Iniciar el cluster de k8s usando el comando `minikube start`.
+2. Habilitar la exposición de ingress de minikube hacia localhost.
+   - `minikube addons enable ingress`
+2. En Linux añadir la ip del cluster `minikube ip` al archivo `/etc/hosts`, en MacOS no hace falta.
+3. Ejecutar el comando `minikube tunnel`
+4. Hacer el build de la imagen de la aplicación web desde dentro de la carpeta `WebApp`.
+   - `minikube image build -t webapp:latest .`
+5. Añadir configmap para el archivo init de sql desde la carpeta de `conf-files`.
+   - `kubectl create configmap db-init-config --from-file=init.sql`
 
 Un archivo `var.tfvars` para las variables de entorno con el siguiente contenido:
 ``` 
@@ -32,14 +38,14 @@ terraform apply -var-file="var.tfvars"
 ```
 Ahora se puede acceder a la web mediante el load balancer (la web te dirá en que contenedor estás):
 * Para acceder a la aplicación web hay que entrar en: https://localhost
-> Hay que aceptar el certificado ya que está autofirmado.
+    > Hay que aceptar el certificado ya que está autofirmado.
 * Para acceder al servicio para administrar la base de datos se debe entrar en la siguiente web en localhost: http://localhost:8081
-> Con usuario `user` y contraseña `pass`.
+    > Con usuario `user` y contraseña `pass`.
 * Administrar la caché: http://localhost:8082
-> La caché no tiene usuario ni contraseña.
+    > La caché no tiene usuario ni contraseña.
 * Prometheus: http://localhost:8083
 * Grafana: http://localhost:8084
-> Con usuario `admin` y contraseña `pass`.
+    > Con usuario `admin` y contraseña `pass`.
 
 ### Lanzar pro
 Para lanzar el entorno de dev primero tendremos que seleccionar el workspace de pro, seguido de un init y un apply:<br>
