@@ -16,6 +16,9 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
    - `minikube image build -t webapp:latest .`
 5. Añadir configmap para el archivo init de sql desde la carpeta de `conf-files`.
    - `kubectl create configmap db-init-config --from-file=init.sql`
+6. Añadir el certificado autofirmado a los secrets de k8s.
+   - `kubectl.exe create secret tls self-signed --key=./conf-files/certs/cert.crt.key --cert=./conf-files/certs/cert.crt`
+
 
 Un archivo `var.tfvars` para las variables de entorno con el siguiente contenido:
 ``` 

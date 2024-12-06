@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache-service
+spec:
+  selector:
+    app: cache
+  ports:
+    - name: redis-admin
+      protocol: TCP
+      port: 30002
+      targetPort: 80
+    - name: cache
+      protocol: TCP
+      port: 6379
+      targetPort: 6379

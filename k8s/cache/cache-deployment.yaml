@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache
+  template:
+    metadata:
+      labels:
+        app: cache
+    spec:
+      containers:
+      - name: redis
+        image: redis:7
+        ports:
+          - containerPort: 6379
+        command: [ "redis-server" ]
+      - name: phpredisadmin
+        image: erikdubbelboer/phpredisadmin:latest
+        ports:
+          - containerPort: 80
+        env:
+          - name: REDIS_1_HOST
+            value: "127.0.0.1"

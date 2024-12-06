@@ -25,3 +25,5 @@ spec:
           value: secret
         - name: DB_PASS
           value: secret
+        - name: REDIS_HOST
+          value: cache-service
