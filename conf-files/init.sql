@@ -51,7 +51,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`use_ID`, `use_name`, `use_surname`) VALUES
 (1, 'a', 'a'),
-(2, 'estas en', 'Produccion');
+(2, 'estas en', 'K8s');
 
 --
 -- Indexes for dumped tables

@@ -20,27 +20,28 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
      127.0.0.1 grafana.local
      127.0.0.1 alertmanager.local
      ```
-4. Ejecutar el comando `minikube tunnel`
-5. Añadir la carpeta shared al cluster con el comando `minikube mount ./shared:/shared`
-6. Hacer el build de la imagen de la aplicación web desde dentro de la carpeta `WebApp`.
-   - `minikube image build -t webapp:latest .`
-7. Añadir los configmap de los archivos de configuración.
+4. Crear los namespaces.
+   - `kubectl create -f .\namespaces.yaml`
+5. Añadir los configmap de los archivos de configuración.
    - ```
-     kubectl create configmap db-init-config --from-file=./conf-files/init.sql -n database # Archivo init para la base de datos
-     kubectl create configmap prometheus-config --from-file=./conf-files/monitoring/prometheus/prometheus-conf.yml --from-file=./conf-files/monitoring/prometheus/alert-rules.yml -n monitoring # Configuracion de Prometheus
-     kubectl create configmap grafana-provisioning-dashboards --from-file=./conf-files/monitoring/grafana/provisioning/dashboards/all-dashboards.yml -n monitoring # Lista de dashboards de Grafana
-     kubectl create configmap grafana-datasources --from-file=./conf-files/monitoring/grafana/provisioning/datasources/datasources.yaml -n monitoring # Datasources de Grafana
-     kubectl create configmap grafana-dashboard --from-file=./conf-files/monitoring/grafana/dashboard.json -n monitoring # Dashboard de prueba de Grafana
-     kubectl create configmap alertmanager --from-file=./conf-files/monitoring/prometheus/alertmanager-conf.yml -n monitoring # Dashboard de prueba de Grafana
+     kubectl create configmap db-init-config --from-file=./conf-files/init.sql -n database-ns # Archivo init para la base de datos
+     kubectl create configmap prometheus-config --from-file=./conf-files/monitoring/prometheus/prometheus-conf.yml --from-file=./conf-files/monitoring/prometheus/alert-rules.yml -n monitoring-ns # Configuracion de Prometheus
+     kubectl create configmap grafana-configmap --from-file=./conf-files/monitoring/grafana/provisioning/dashboards/all-dashboards.yml --from-file=./conf-files/monitoring/grafana/provisioning/datasources/datasources.yaml --from-file=./conf-files/monitoring/grafana/dashboard.json -n monitoring-ns # Lista de dashboards de Grafana
+     kubectl create configmap alertmanager-configmap --from-file=./conf-files/monitoring/prometheus/alertmanager-conf.yml -n monitoring-ns # Dashboard de prueba de Grafana
      ```
-8. Añadir el certificado autofirmado a los secrets de k8s.
-   - `kubectl.exe create secret tls self-signed --key=./conf-files/certs/cert.crt.key --cert=./conf-files/certs/cert.crt`
-9. Añadir los secrets de usuarios y contraseñas.
+6. Añadir el certificado autofirmado a los secrets de k8s.
+   - `kubectl create secret tls self-signed --key=./conf-files/certs/cert.crt.key --cert=./conf-files/certs/cert.crt -n ingress-ns`
+7. Añadir los secrets de usuarios y contraseñas.
    - ```
-     kubectl create secret generic db-user --from-literal=username='user' --from-literal=password='pass' -n webapp
-     kubectl create secret generic grafana-pass --from-literal=grafana-pass='pass' -n monitoring
+     kubectl create secret generic db-user --from-literal=username='user' --from-literal=password='pass' -n webapp-ns
+     kubectl create secret generic grafana-pass --from-literal=grafana-pass='pass' -n monitoring-ns
      ```
-10. 
+8. Crear el rol para la monitorización.
+    - `kubectl create -f .\monitoring\mon-roles.yaml`
+9. Hacer el build de la imagen de la aplicación web desde dentro de la carpeta `WebApp`.
+    - `minikube image build -t webapp:latest .`
+10. Ejecutar el comando `minikube tunnel`
+11. Añadir la carpeta shared al cluster con el comando `minikube mount ./shared:/shared`
 
 
 ### Lanzar dev

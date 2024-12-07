@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webapp-deployment
+  namespace: webapp-ns
 spec:
   replicas: 2
   selector:
@@ -27,7 +28,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: DB_HOST
-          value: database-service
+          value: database-service.database-ns.svc.cluster.local
         - name: DB_USER
           valueFrom:
             secretKeyRef:
@@ -39,7 +40,7 @@ spec:
               name: db-user
               key: password
         - name: REDIS_HOST
-          value: cache-service
+          value: cache-service.cache-ns.svc.cluster.local
       volumes:
         - name: shared-volume
           hostPath:

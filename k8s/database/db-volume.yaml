@@ -2,6 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: db-data-pvc
+  namespace: database-ns
   labels:
     app: mariadb
 spec:
