@@ -1,0 +1,71 @@
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: "monitor"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets:
+        - 'alertmanager:9093'
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - "alert-rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+  # Mariadb exporter job
+  - job_name: mariadb
+    params:
+      auth_module: [client]
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['database-service:3306']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+          # The mysqld_exporter host:port
+        replacement: database-service:9104
+  # Redis exporter job
+  - job_name: 'redis'
+    static_configs:
+      - targets:
+        - redis://cache-service:6379
+    metrics_path: /scrape
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: cache-service:9121
+  # WebApp exporter job (balckbox)
+  - job_name: 'webapp'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Comprueba que la respuesta sea HTTP 200
+    static_configs:
+      - targets:
+        - http://webapp-service:80
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: webapp-service:9115  # blackbox exporter hostname:port.

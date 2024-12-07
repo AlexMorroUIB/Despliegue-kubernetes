@@ -1,0 +1,37 @@
+groups:
+  - name: container_alerts
+    rules:
+      - alert: DBNotRunning
+        expr: mysql_up{job="mariadb"} < 1
+        for: 5s
+        labels:
+          severity: critical
+        annotations:
+          summary: "La base de datos {{ $labels.instance }} no responde."
+          description: "La base de datos {{ $labels.instance }} no responde."
+      - alert: WebApp-Container-notRunning
+        expr: probe_success{job="webapp"} == 0
+        for: 5s
+        labels:
+          severity: warning
+        annotations:
+          summary: "El contenedor {{ $labels.instance }} no responde."
+          description: "El contenedor {{ $labels.instance }} no ha respondido durante 5s."
+      - alert: Redis-Container-notRunning
+        expr: redis_up{job="redis"} == 0
+        for: 5s
+        labels:
+          severity: warning
+        annotations:
+          summary: "El contenedor {{ $labels.instance }} no responde."
+          description: "El contenedor {{ $labels.instance }} no ha respondido durante 5s."
+  - name: verificacion_prometheus
+    rules:
+      - alert: PrometheusUp
+        expr: up{job="prometheus"} > 0
+        for: 5s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus está funcionando"
+          description: "Prometheus está funcionando en {{ $labels.instance }} ."

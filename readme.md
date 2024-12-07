@@ -10,15 +10,24 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
 1. Iniciar el cluster de k8s usando el comando `minikube start`.
 2. Habilitar la exposición de ingress de minikube hacia localhost.
    - `minikube addons enable ingress`
-2. En Linux añadir la ip del cluster `minikube ip` al archivo `/etc/hosts`, en MacOS no hace falta.
-3. Ejecutar el comando `minikube tunnel`
-4. Hacer el build de la imagen de la aplicación web desde dentro de la carpeta `WebApp`.
+3. Modificar el archivo `/etc/hosts` añadiendo la siguiente configuración:
+   - En Linux usar la ip del cluster `minikube ip` en vez de localhost.
+   ```
+   127.0.0.1 web.local
+   127.0.0.1 phpmyadmin.local
+   127.0.0.1 redis.local
+   ```
+4. Ejecutar el comando `minikube tunnel`
+5. Añadir la carpeta shared al cluster con el comando `minikube mount ./shared:/shared`
+6. Hacer el build de la imagen de la aplicación web desde dentro de la carpeta `WebApp`.
    - `minikube image build -t webapp:latest .`
-5. Añadir configmap para el archivo init de sql desde la carpeta de `conf-files`.
+7. Añadir configmap para el archivo init de sql desde la carpeta de `conf-files`.
    - `kubectl create configmap db-init-config --from-file=init.sql`
-6. Añadir el certificado autofirmado a los secrets de k8s.
+8. Añadir el certificado autofirmado a los secrets de k8s.
    - `kubectl.exe create secret tls self-signed --key=./conf-files/certs/cert.crt.key --cert=./conf-files/certs/cert.crt`
-
+9. Añadir los secrets de usuarios y contraseñas.
+   - `kubectl create secret generic db-user --from-literal=username='user' --from-literal=password='pass'`
+10. Modificar el archivo `/etc/hosts` añadiendo la siguiente configuración:
 
 Un archivo `var.tfvars` para las variables de entorno con el siguiente contenido:
 ``` 

@@ -74,7 +74,7 @@ module "monitoring" {
   grafana-port = 8084
   alertmanager-port = 8085
   alermanager-onoff = local.alertas
-  prometheus-config = abspath("../conf-files/${terraform.workspace}/prometheus/prometheus.yml")
+  prometheus-config = abspath("../conf-files/${terraform.workspace}/prometheus/prometheus-conf.yml")
   grafana-provisioning = abspath("../conf-files/${terraform.workspace}/grafana/provisioning")
   grafana-dashboard = abspath("../conf-files/${terraform.workspace}/grafana/dashboard.json")
   alermanager-config = abspath("../conf-files/${terraform.workspace}/prometheus/alertmanager.yml")
