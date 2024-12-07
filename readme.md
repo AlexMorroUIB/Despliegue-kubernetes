@@ -12,33 +12,36 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
    - `minikube addons enable ingress`
 3. Modificar el archivo `/etc/hosts` añadiendo la siguiente configuración:
    - En Linux usar la ip del cluster `minikube ip` en vez de localhost.
-   ```
-   127.0.0.1 web.local
-   127.0.0.1 phpmyadmin.local
-   127.0.0.1 redis.local
-   ```
+   - ```
+     127.0.0.1 web.local
+     127.0.0.1 phpmyadmin.local
+     127.0.0.1 redis.local
+     127.0.0.1 prometheus.local
+     127.0.0.1 grafana.local
+     127.0.0.1 alertmanager.local
+     ```
 4. Ejecutar el comando `minikube tunnel`
 5. Añadir la carpeta shared al cluster con el comando `minikube mount ./shared:/shared`
 6. Hacer el build de la imagen de la aplicación web desde dentro de la carpeta `WebApp`.
    - `minikube image build -t webapp:latest .`
-7. Añadir configmap para el archivo init de sql desde la carpeta de `conf-files`.
-   - `kubectl create configmap db-init-config --from-file=init.sql`
+7. Añadir los configmap de los archivos de configuración.
+   - ```
+     kubectl create configmap db-init-config --from-file=./conf-files/init.sql -n database # Archivo init para la base de datos
+     kubectl create configmap prometheus-config --from-file=./conf-files/monitoring/prometheus/prometheus-conf.yml --from-file=./conf-files/monitoring/prometheus/alert-rules.yml -n monitoring # Configuracion de Prometheus
+     kubectl create configmap grafana-provisioning-dashboards --from-file=./conf-files/monitoring/grafana/provisioning/dashboards/all-dashboards.yml -n monitoring # Lista de dashboards de Grafana
+     kubectl create configmap grafana-datasources --from-file=./conf-files/monitoring/grafana/provisioning/datasources/datasources.yaml -n monitoring # Datasources de Grafana
+     kubectl create configmap grafana-dashboard --from-file=./conf-files/monitoring/grafana/dashboard.json -n monitoring # Dashboard de prueba de Grafana
+     kubectl create configmap alertmanager --from-file=./conf-files/monitoring/prometheus/alertmanager-conf.yml -n monitoring # Dashboard de prueba de Grafana
+     ```
 8. Añadir el certificado autofirmado a los secrets de k8s.
    - `kubectl.exe create secret tls self-signed --key=./conf-files/certs/cert.crt.key --cert=./conf-files/certs/cert.crt`
 9. Añadir los secrets de usuarios y contraseñas.
-   - `kubectl create secret generic db-user --from-literal=username='user' --from-literal=password='pass'`
-10. Modificar el archivo `/etc/hosts` añadiendo la siguiente configuración:
+   - ```
+     kubectl create secret generic db-user --from-literal=username='user' --from-literal=password='pass' -n webapp
+     kubectl create secret generic grafana-pass --from-literal=grafana-pass='pass' -n monitoring
+     ```
+10. 
 
-Un archivo `var.tfvars` para las variables de entorno con el siguiente contenido:
-``` 
-# WebApp env variabes
-db_user = "user"
-db_pass = "pass"
-db_root_pass = "pass"
-
-# Grafana
-grafana_pass = "pass"
-```
 
 ### Lanzar dev
 Para lanzar el entorno de dev primero tendremos que seleccionar el workspace de dev, seguido de un init y un apply:<br>

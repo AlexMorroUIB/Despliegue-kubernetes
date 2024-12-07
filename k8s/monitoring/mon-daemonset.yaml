@@ -31,7 +31,53 @@ spec:
           volumeMounts:
             - name: prometheus-config-volume
               mountPath: /etc/prometheus/
+            - name: prometheus-alert-rules-volume
+              mountPath: /etc/prometheus/
+        - name: grafana
+          image: grafana/grafana
+          env:
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-pass
+                  key: grafana-pass
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: grafana-provisioning-dashboards
+              mountPath: /etc/grafana/provisioning/dashboards
+            - name: grafana-provisioning-datasources
+              mountPath: /etc/grafana/provisioning/datasources
+            - name: grafana-dashboards
+              mountPath: /var/lib/grafana/dashboards
+        - name: alertmanager
+          image: prom/alertmanager
+          ports:
+            - containerPort: 9093
+          volumeMounts:
+            - name: alertmanager-config
+              mountPath: /etc/alertmanager/
       volumes:
         - name: prometheus-config-volume
           configMap:
             name: prometheus-config
+            items:
+              - key: prometheus-conf.yml
+                path: prometheus-conf.yml
+              - key: alert-rules.yml
+                path: alert-rules.yml
+        - name: grafana-provisioning-dashboards
+          configMap:
+            name: grafana-provisioning-dashboards
+        - name: grafana-provisioning-datasources
+          configMap:
+            name: grafana-datasources
+        - name: grafana-dashboards
+          configMap:
+            name: grafana-dashboard
+        - name: alertmanager-config
+          configMap:
+            name: alertmanager-configmap
+            items:
+              - key: alertmanager-conf.yml
+                path: alertmanager.yml

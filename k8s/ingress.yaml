@@ -1,11 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-master
-  #namespace: external-ingress
+  name: ingress
+  #namespace: ingress
   annotations:
     ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.org/mergeable-ingress-type: "master"
 spec:
   ingressClassName: nginx
   tls:
@@ -44,4 +43,33 @@ spec:
                 port:
                   number: 30002
     - host: prometheus.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-service-ext
+                port:
+                  number: 30003
+    - host: grafana.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-service-ext
+                port:
+                  number: 30004
+    - host: alertmanager.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-service-ext
+                port:
+                  number: 30005
                   

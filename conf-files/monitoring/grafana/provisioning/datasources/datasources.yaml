@@ -5,8 +5,8 @@ datasources:
     type: prometheus
     access: proxy
     # Access mode - proxy (server in the UI) or direct (browser in the UI).
-    url: http://prometheus:9090
-    jsonData:
+    url: monitoring-service:30003
+    onData:
       httpMethod: POST
       manageAlerts: true
       prometheusType: Prometheus
