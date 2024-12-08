@@ -5,7 +5,7 @@ datasources:
     type: prometheus
     access: proxy
     # Access mode - proxy (server in the UI) or direct (browser in the UI).
-    url: monitoring-service:30003
+    url: http://127.0.0.1:9090
     onData:
       httpMethod: POST
       manageAlerts: true

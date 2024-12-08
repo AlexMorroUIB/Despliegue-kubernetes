@@ -6,8 +6,13 @@ metadata:
 spec:
   selector:
     app: webapp
+  type: LoadBalancer
   ports:
     - name: webapp
       protocol: TCP
       port: 30000
       targetPort: 80
+    - name: blackbox-exporter
+      protocol: TCP
+      port: 9115
+      targetPort: 9115

@@ -33,10 +33,30 @@ spec:
         env:
         - name: PMA_HOST
           value: "127.0.0.1"
+      initContainers:
+        - name: mysql-exporter
+          image: prom/mysqld-exporter
+          restartPolicy: Always
+          args:
+            - "--config.my-cnf=/cfg/config.my-cnf"
+          ports:
+            - containerPort: 9104
+          volumeMounts:
+            - mountPath: "/cfg"
+              name: mysql-exporter-config
       volumes:
       - name: db-init
         configMap:
-          name: db-init-config
+          name: db-configmap
+          items:
+            - key: init.sql
+              path: init.sql
       - name: db-data
         persistentVolumeClaim:
           claimName: db-data-pvc
+      - name: mysql-exporter-config
+        configMap:
+          name: db-configmap
+          items:
+            - key: mysql-exporter.my-cnf
+              path: config.my-cnf

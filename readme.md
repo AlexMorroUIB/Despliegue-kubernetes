@@ -24,10 +24,12 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
    - `kubectl create -f .\namespaces.yaml`
 5. Añadir los configmap de los archivos de configuración.
    - ```
-     kubectl create configmap db-init-config --from-file=./conf-files/init.sql -n database-ns # Archivo init para la base de datos
-     kubectl create configmap prometheus-config --from-file=./conf-files/monitoring/prometheus/prometheus-conf.yml --from-file=./conf-files/monitoring/prometheus/alert-rules.yml -n monitoring-ns # Configuracion de Prometheus
-     kubectl create configmap grafana-configmap --from-file=./conf-files/monitoring/grafana/provisioning/dashboards/all-dashboards.yml --from-file=./conf-files/monitoring/grafana/provisioning/datasources/datasources.yaml --from-file=./conf-files/monitoring/grafana/dashboard.json -n monitoring-ns # Lista de dashboards de Grafana
-     kubectl create configmap alertmanager-configmap --from-file=./conf-files/monitoring/prometheus/alertmanager-conf.yml -n monitoring-ns # Dashboard de prueba de Grafana
+     kubectl create configmap db-configmap --from-file=./conf-files/init.sql --from-file=./conf-files/monitoring/prometheus/mysql-exporter.my-cnf -n database-ns
+     kubectl create configmap prometheus-configmap --from-file=./conf-files/monitoring/prometheus/prometheus-conf.yml --from-file=./conf-files/monitoring/prometheus/alert-rules.yml -n monitoring-ns
+     # Lista de dashboards de Grafana
+     kubectl create configmap grafana-configmap --from-file=./conf-files/monitoring/grafana/provisioning/dashboards/all-dashboards.yml --from-file=./conf-files/monitoring/grafana/provisioning/datasources/datasources.yaml --from-file=./conf-files/monitoring/grafana/dashboard.json -n monitoring-ns
+     kubectl create configmap alertmanager-configmap --from-file=./conf-files/monitoring/prometheus/alertmanager-conf.yml -n monitoring-ns
+     kubectl create configmap blackbox-configmap --from-file=./conf-files/monitoring/prometheus/blackbox-config.yml -n webapp-ns
      ```
 6. Añadir el certificado autofirmado a los secrets de k8s.
    - `kubectl create secret tls self-signed --key=./conf-files/certs/cert.crt.key --cert=./conf-files/certs/cert.crt -n ingress-ns`

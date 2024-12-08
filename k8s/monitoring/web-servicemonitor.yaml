@@ -1,0 +1,28 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter
+  namespace: monitoring-ns
+spec:
+  endpoints:
+    - interval: 1m
+      path: /probe
+      scrapeTimeout: 10s
+      params:
+        module: [tcp_prober]
+      relabelings:
+        - sourceLabels: [__address__]
+          targetLabel: __param_target
+        - targetLabel: __address__
+          replacement:  monitoring-service:9115 # is the name:port of the blackbox exporter service
+        - sourceLabels: [__param_target]
+          targetLabel: instance
+        - action: labelmap
+          regex: __meta_kubernetes_service_label_(.+) # specify to monitor kubernetes services
+  jobLabel: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - webapp-ns
+  selector:
+    matchLabels:
+      app: webapp

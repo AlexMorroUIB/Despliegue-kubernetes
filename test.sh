@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# kubectl delete -n monitoring-ns pod $(kubectl get pods -n monitoring-ns --no-headers -o custom-columns=":metadata.name")
+
 mensajeDeConfirmación() {
     if [ "$1" == "dev" ]; then 
         echo "compruébalo en grafana:"

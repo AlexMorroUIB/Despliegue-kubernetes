@@ -41,8 +41,25 @@ spec:
               key: password
         - name: REDIS_HOST
           value: cache-service.cache-ns.svc.cluster.local
+      initContainers:
+        - name: blackbox-exporter
+          image: quay.io/prometheus/blackbox-exporter
+          restartPolicy: Always
+          args:
+            - "--config.file=/config/config.yml"
+          ports:
+            - containerPort: 9115
+          volumeMounts:
+            - mountPath: "/config"
+              name: blackbox-config
       volumes:
         - name: shared-volume
           hostPath:
             path: /shared
             type: Directory
+        - name: blackbox-config
+          configMap:
+            name: blackbox-configmap
+            items:
+              - key: blackbox-config.yml
+                path: config.yml
