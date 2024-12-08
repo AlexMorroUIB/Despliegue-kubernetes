@@ -61,11 +61,11 @@ scrape_configs:
       module: [http_2xx]  # Comprueba que la respuesta sea HTTP 200
     static_configs:
       - targets:
-        - http://localhost:80
+        - http://webapp-service.webapp-ns.svc.cluster.local:80/health
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: webapp-service.webapp-ns.svc.cluster.local:9115  # blackbox exporter hostname:port.
+        #replacement: webapp-service.webapp-ns.svc.cluster.local:9115  # blackbox exporter hostname:port.
