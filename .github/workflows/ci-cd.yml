@@ -71,10 +71,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - run: echo "Para integrar la nueva versión en k8s deberías ejecutar los siguientes comandos:"
-      - run: echo "cd WebApp"
-      - run: echo "minikube image rm webapp:latest"
-      - run: echo "minikube image build -t webapp:latest ."
-      - run: echo "cd ../k8s"
-      - run: echo "kubectl delete -n webapp-ns deployment webapp-deployment"
-      - run: echo "kubectl apply -f ./webapp/web-deployment"
+      - name: Deploy echo
+        run: |
+          cat <<EOF
+          Para integrar la nueva versión en k8s deberías ejecutar los siguientes comandos:
+          cd WebApp
+          minikube image rm webapp:latest
+          minikube image build -t webapp:latest .
+          cd ../k8s
+          kubectl delete -n webapp-ns deployment webapp-deployment
+          kubectl apply -f ./webapp/web-deployment
+          EOF
