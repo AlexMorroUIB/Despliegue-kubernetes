@@ -38,7 +38,9 @@ jobs:
           cd WebApp
           npm ci
       - name: Jest
-        run: npm test
+        run:  |
+          cd WebApp
+          npm test
 
   build:
     # The type of runner that the job will run on
