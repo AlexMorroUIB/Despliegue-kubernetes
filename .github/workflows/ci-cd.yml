@@ -80,5 +80,5 @@ jobs:
           minikube image build -t webapp:latest .
           cd ../k8s
           kubectl delete -n webapp-ns deployment webapp-deployment
-          kubectl apply -f ./webapp/web-deployment
+          kubectl apply -f ./webapp/web-deployment.yaml
           EOF
