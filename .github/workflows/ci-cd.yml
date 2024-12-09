@@ -32,12 +32,8 @@ jobs:
         with:
           node-version: "20"
           cache-dependency-path: "WebApp/package-lock.json"
-      - name: List files
-        run: ls -R
-      - name: List package-lock
-        run: cat WebApp/package-lock.json
       - name: Install dependencies
-        run: npm ci
+        run: npm install
       - name: Jest
         run: npm test
 
