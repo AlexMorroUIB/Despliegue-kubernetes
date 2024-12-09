@@ -61,9 +61,3 @@ process.on('unhandledRejection', (error, promise) => {
   console.log(promise)
   console.log(error)
 })
-
-// test
-function health () {
-  return 200
-}
-module.exports = health
