@@ -18,10 +18,10 @@ jobs:
     name: Lint yaml files
     steps:
       - uses: actions/checkout@v4
-      - name: YAML Lint
-        uses: ibiqlik/action-yamllint@v3.1.1
+      - name: K8s Lint
+        uses: azure/k8s-lint@v3
         with:
-          file_or_dir: k8s/
+          manifests: k8s/
 
   test:
     runs-on: ubuntu-latest
