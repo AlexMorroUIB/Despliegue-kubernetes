@@ -1,0 +1,16 @@
+# action.yml
+name: 'WebApp test'
+description: 'Run webapp and curl health-check'
+inputs:
+  url:  # id of input
+    description: 'Health-check url'
+    required: true
+    default: '/health'
+outputs:
+  status: # id of output
+    description: 'Health-check result'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.url }}

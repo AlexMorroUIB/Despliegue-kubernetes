@@ -20,50 +20,45 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
      127.0.0.1 grafana.local
      127.0.0.1 alertmanager.local
      ```
-4. Crear los namespaces.
-   - `kubectl create -f .\namespaces.yaml`
-5. Añadir los configmap de los archivos de configuración.
-   - ```
-     kubectl create configmap db-configmap --from-file=./conf-files/init.sql --from-file=./conf-files/monitoring/prometheus/mysql-exporter.my-cnf -n database-ns
-     kubectl create configmap prometheus-configmap --from-file=./conf-files/monitoring/prometheus/prometheus-conf.yml --from-file=./conf-files/monitoring/prometheus/alert-rules.yml -n monitoring-ns
-     # Lista de dashboards de Grafana
-     kubectl create configmap grafana-configmap --from-file=./conf-files/monitoring/grafana/provisioning/dashboards/all-dashboards.yml --from-file=./conf-files/monitoring/grafana/provisioning/datasources/datasources.yaml --from-file=./conf-files/monitoring/grafana/dashboard.json -n monitoring-ns
-     kubectl create configmap alertmanager-configmap --from-file=./conf-files/monitoring/prometheus/alertmanager-conf.yml -n monitoring-ns
-     kubectl create configmap blackbox-configmap --from-file=./conf-files/monitoring/prometheus/blackbox-config.yml -n webapp-ns
-     ```
-6. Añadir el certificado autofirmado a los secrets de k8s.
-   - `kubectl create secret tls self-signed --key=./conf-files/certs/cert.crt.key --cert=./conf-files/certs/cert.crt -n ingress-ns`
-7. Añadir los secrets de usuarios y contraseñas.
-   - ```
-     kubectl create secret generic db-user --from-literal=username='user' --from-literal=password='pass' -n webapp-ns
-     kubectl create secret generic grafana-pass --from-literal=grafana-pass='pass' -n monitoring-ns
-     ```
-8. Crear el rol para la monitorización.
-    - `kubectl create -f .\monitoring\mon-roles.yaml`
-9. Hacer el build de la imagen de la aplicación web desde dentro de la carpeta `WebApp`.
-    - `minikube image build -t webapp:latest .`
-10. Ejecutar el comando `minikube tunnel`
-11. Añadir la carpeta shared al cluster con el comando `minikube mount ./shared:/shared`
+4. Ejecutar el script preconfiguration.sh o seguir los siguientes pasos:
+    a. Crear los namespaces.
+        - `kubectl create -f ./k8s/namespaces.yaml`
+    5. Añadir los configmap de los archivos de configuración.
+        - ```
+            kubectl create configmap db-configmap --from-file=./conf-files/init.sql --from-file=./conf-files/monitoring/prometheus/mysql-exporter.my-cnf -n database-ns
+            kubectl create configmap prometheus-configmap --from-file=./conf-files/monitoring/prometheus/prometheus-conf.yml --from-file=./conf-files/monitoring/prometheus/alert-rules.yml -n monitoring-ns
+            # Lista de dashboards de Grafana
+            kubectl create configmap grafana-configmap --from-file=./conf-files/monitoring/grafana/provisioning/dashboards/all-dashboards.yml --from-file=./conf-files/monitoring/grafana/provisioning/datasources/datasources.yaml --from-file=./conf-files/monitoring/grafana/dashboard.json -n monitoring-ns
+            kubectl create configmap alertmanager-configmap --from-file=./conf-files/monitoring/prometheus/alertmanager-conf.yml -n monitoring-ns
+            kubectl create configmap blackbox-configmap --from-file=./conf-files/monitoring/prometheus/blackbox-config.yml -n webapp-ns
+            ```
+    6. Añadir el certificado autofirmado a los secrets de k8s.
+        - `kubectl create secret tls self-signed --key=./conf-files/certs/cert.crt.key --cert=./conf-files/certs/cert.crt -n ingress-ns`
+    7. Añadir los secrets de usuarios y contraseñas.
+        - ```
+            kubectl create secret generic db-user --from-literal=username='user' --from-literal=password='pass' -n webapp-ns
+            kubectl create secret generic grafana-pass --from-literal=grafana-pass='pass' -n monitoring-ns
+            ```
+    8. Crear el rol para la monitorización.
+        - `kubectl create -f ./k8s/roles-monitoring.yaml`
+    9. Hacer el build de la imagen de la aplicación web desde dentro de la carpeta `WebApp`.
+        - `minikube image build -t webapp:latest .`
+10. En una terminal ejecutar el comando `minikube tunnel`.
+11. En otra terminal añadir la carpeta shared al cluster con el comando `minikube mount ./shared:/shared`
 
 
-### Lanzar dev
-Para lanzar el entorno de dev primero tendremos que seleccionar el workspace de dev, seguido de un init y un apply:<br>
-(Si antes has lanzado otro entorno es mejor que hagas un `terraform destroy -var-file="var.tfvars"`)
-```
-terraform workspace select dev
-terraform init # Si no lo has hecho antes
-terraform apply -var-file="var.tfvars"
-```
-Ahora se puede acceder a la web mediante el load balancer (la web te dirá en que contenedor estás):
-* Para acceder a la aplicación web hay que entrar en: https://localhost
+
+Ahora se puede acceder a la web mediante el ingress (la web te dirá en que pod estás):
+* Para acceder a la aplicación web hay que entrar en: https://web.local
     > Hay que aceptar el certificado ya que está autofirmado.
-* Para acceder al servicio para administrar la base de datos se debe entrar en la siguiente web en localhost: http://localhost:8081
+* Para acceder al servicio para administrar la base de datos se debe entrar en la siguiente web en localhost: https://phpmyadmin.local
     > Con usuario `user` y contraseña `pass`.
-* Administrar la caché: http://localhost:8082
+* Administrar la caché: https://cache.local
     > La caché no tiene usuario ni contraseña.
-* Prometheus: http://localhost:8083
-* Grafana: http://localhost:8084
+* Prometheus: https://prometheus.local
+* Grafana: https://grafana.local
     > Con usuario `admin` y contraseña `pass`.
+* Alertmanager: https://alertmanager.local
 
 ### Lanzar pro
 Para lanzar el entorno de dev primero tendremos que seleccionar el workspace de pro, seguido de un init y un apply:<br>

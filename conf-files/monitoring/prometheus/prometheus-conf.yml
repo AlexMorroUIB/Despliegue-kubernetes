@@ -61,7 +61,7 @@ scrape_configs:
       module: [http_2xx]  # Comprueba que la respuesta sea HTTP 200
     static_configs:
       - targets:
-        - http://webapp-service.webapp-ns.svc.cluster.local:80/health
+        - http://webapp-service.webapp-ns.svc.cluster.local:3000/health
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
