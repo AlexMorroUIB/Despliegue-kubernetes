@@ -1,12 +1,10 @@
 {
   "name": "webapp",
-  "version": "1.5",
+  "version": "1.5.1",
   "description": "",
   "private": true,
-  "keywords": [
-    ""
-  ],
-  "license": "",
+  "keywords": [],
+  "license": "ISC",
   "author": "Alex Morro",
   "scripts": {
     "start": "node server.js",
