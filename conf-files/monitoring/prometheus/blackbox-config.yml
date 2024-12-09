@@ -1,3 +1,4 @@
+---
 # Modulo custom para comprobar HTTPS con certificado autofirmado 
 modules:
   http_2xx:
