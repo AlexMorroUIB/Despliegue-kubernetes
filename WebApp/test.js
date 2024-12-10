@@ -3,12 +3,12 @@ async function getHealth () {
   try {
     await fetch('/health')
         .then(response => {
-          process.stdout.write(response.status)
+          console.log(response.status)
         })
         .catch(err => {
-          process.stderr.write(err)
+            console.log(err)
         })
   } catch (err) {
-    process.stderr.write(err)
+      console.log(err)
   }
 }
