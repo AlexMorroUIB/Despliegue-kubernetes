@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-green-deployment
+  namespace: webapp-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+      env: green
+  template:
+    metadata:
+      labels:
+        app: webapp
+        env: green
+    spec:
+      containers:
+        - name: webapp-canary
+          image: webapp:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: "/home/node/app/src/img/"
+              name: shared-volume
+          env:
+            - name: INSTANCIA
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: DB_HOST
+              value: database-service.database-ns.svc.cluster.local
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-user
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-user
+                  key: password
+            - name: REDIS_HOST
+              value: cache-service.cache-ns.svc.cluster.local
+      initContainers:
+        - name: blackbox-exporter
+          image: quay.io/prometheus/blackbox-exporter
+          restartPolicy: Always
+          ports:
+            - containerPort: 9115
+      volumes:
+        - name: shared-volume
+          hostPath:
+            path: /shared
+            type: Directory

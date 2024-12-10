@@ -49,7 +49,7 @@ router.use((req, res, next) => {
 })
 
 router.get('/health', (req, res) => {
-  res.status(200).send('Ok')
+  res.status(200).send(process.env.INSTANCIA + ': Ok')
 })
 
 app.use(express.static(path.join(__dirname, 'src')))

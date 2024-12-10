@@ -10,7 +10,7 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-      - local
+      - web.local
     secretName: self-signed
   rules:
     - host: web.local
