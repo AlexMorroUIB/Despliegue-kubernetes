@@ -44,7 +44,7 @@ jobs:
       - name: Run the Docker container
         run: |
           docker run -d --name webapp webapp:latest
-          docker exec -t webapp sh -c "wget -S -O - localhost/health > /dev/null"
+          docker exec -t webapp sh -c "node ./test.js"
 
 #      - name: Run webapp
 #        uses: addnab/docker-run-action@v3
