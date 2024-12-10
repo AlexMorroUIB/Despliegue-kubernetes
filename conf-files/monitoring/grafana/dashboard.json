@@ -103,7 +103,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.4.0",
       "targets": [
         {
           "disableTextWrap": false,
@@ -131,29 +131,20 @@
             "mode": "thresholds"
           },
           "mappings": [],
-          "max": 3,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-red",
+                "color": "red",
                 "value": null
               },
               {
-                "color": "red",
-                "value": 1
-              },
-              {
-                "color": "#EAB839",
-                "value": 2
-              },
-              {
                 "color": "dark-green",
-                "value": 3
+                "value": 1
               }
             ]
-          }
+          },
+          "unit": "bool_on_off"
         },
         "overrides": []
       },
@@ -179,7 +170,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.4.0",
       "targets": [
         {
           "datasource": {
@@ -188,7 +179,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "count(probe_success{job=\"webapp\"} == 1)",
+          "expr": "probe_success{job=\"webapp\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -197,7 +188,7 @@
           "useBackend": false
         }
       ],
-      "title": "WebApp instances",
+      "title": "WebApp status",
       "type": "gauge"
     },
     {
@@ -280,7 +271,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.4.0",
       "targets": [
         {
           "disableTextWrap": false,
@@ -296,72 +287,6 @@
       ],
       "title": "Redis instances",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-red",
-                "value": null
-              },
-              {
-                "color": "dark-green",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 5,
-        "x": 12,
-        "y": 8
-      },
-      "id": 4,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "11.3.0",
-      "targets": [
-        {
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "haproxy_up{job=\"haproxy\"}",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "HAproxy status",
-      "type": "gauge"
     }
   ],
   "preload": false,
@@ -378,6 +303,6 @@
   "timezone": "browser",
   "title": "Main",
   "uid": "fe3fgiek9bd34f",
-  "version": 12,
+  "version": 1,
   "weekStart": ""
 }
