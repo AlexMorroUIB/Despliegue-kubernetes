@@ -1,5 +1,4 @@
----
-# Modulo custom para comprobar HTTPS con certificado autofirmado 
+# Modulo custom para comprobar HTTPS con certificado autofirmado
 modules:
   http_2xx:
     prober: http

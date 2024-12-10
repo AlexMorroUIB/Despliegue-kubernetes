@@ -1,4 +1,3 @@
----
 groups:
   - name: container_alerts
     rules:

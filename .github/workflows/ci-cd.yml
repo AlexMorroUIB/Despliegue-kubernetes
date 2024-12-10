@@ -15,38 +15,47 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Lint yaml files
+    name: Lint k8s files
     steps:
       - uses: actions/checkout@v4
-      - name: K8s Lint
+      - name: k8s Lint
         uses: azure/k8s-lint@v3
         with:
           manifests: k8s/
 
   test:
     runs-on: ubuntu-latest
+    name: Test webapp
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
     needs: lint
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v2
-      - uses: docker/build-push-action@v4
-        with:
-          context: ./WebApp/
-          file: "Dockerfile"
-          tags: webapp:latest
-          load: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          push: false
-      - name: Run webapp
-        uses: addnab/docker-run-action@v3
-        with:
-          image: webapp:latest
-          run: echo "curl http://localhost/health"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build the Docker image
+        run: |
+          cd WebApp
+          docker build -t webapp:latest .
+
+      - name: Run the Docker container
+        run: |
+          docker run -d --name webapp webapp:latest
+          docker exec -it webapp sh -c "wget -S -O - localhost/health  > /dev/null"
+
+#      - name: Run webapp
+#        uses: addnab/docker-run-action@v3
+#        with:
+#          image: webapp:latest
+#          run: echo "curl http://localhost/health"
 
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    name: Build webapp
     needs: test
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -59,6 +68,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    name: Deploy to k8s
     needs: build
     steps:
       - name: Deploy echo
