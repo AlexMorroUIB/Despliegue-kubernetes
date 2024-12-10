@@ -1,5 +1,0 @@
-**/node_modules
-src/*
-server.js
-storageFunctions.js
-*.json

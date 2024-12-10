@@ -44,13 +44,13 @@ jobs:
       - name: Run the Docker container
         run: |
           docker run -d --name webapp webapp:latest
-          docker exec -it webapp sh -c "wget -S -O - localhost/health  > /dev/null"
+          docker exec -t webapp sh -c "wget -S -O - localhost/health > /dev/null"
 
 #      - name: Run webapp
 #        uses: addnab/docker-run-action@v3
 #        with:
 #          image: webapp:latest
-#          run: echo "curl http://localhost/health"
+#          run: echo "wget -S -O - localhost/health > /dev/null"
 
   build:
     # The type of runner that the job will run on

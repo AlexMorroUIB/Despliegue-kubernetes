@@ -7,17 +7,12 @@
   "license": "ISC",
   "author": "Alex Morro",
   "scripts": {
-    "start": "node server.js",
-    "test": "jest",
-    "format": "prettier-standard --lint"
+    "start": "node server.js"
   },
   "dependencies": {
     "dotenv": "~16.4.7",
     "express": "~4.21.2",
-    "jest": "^29.7.0",
-    "lint-staged": "^15.2.10",
     "mariadb": "~3.4.0",
-    "prettier-standard": "^15.0.1",
     "redis": "~4.7.0"
   }
 }
