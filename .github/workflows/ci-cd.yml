@@ -35,36 +35,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - name: Build the Docker image
         run: |
           cd WebApp
           docker build -t webapp:latest .
 
-      - name: Run the Docker container
-        run: |
-          docker run -d --name webapp webapp:latest
-          docker exec -t webapp sh -c "node ./test.js"
-
-#      - name: Run webapp
-#        uses: addnab/docker-run-action@v3
-#        with:
-#          image: webapp:latest
-#          run: echo "wget -S -O - localhost/health > /dev/null"
+      - name: Run webapp
+        uses: addnab/docker-run-action@v3
+        with:
+          image: webapp:latest
+          run: echo "wget -S -O - localhost/health > /dev/null"
 
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    name: Build webapp
+    name: Build webapp docker image
     needs: test
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v4
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build the Docker image
+        run: |
+          cd WebApp
+          docker build -t webapp:latest .
+      - name: Upload image artifact
+        uses: ishworkh/docker-image-artifact-upload@v2.0.1
         with:
-          name: workspace_artifacts
-          path: ${{ github.workspace }}
+          image: "webapp:latest"
 
   deploy:
     runs-on: ubuntu-latest

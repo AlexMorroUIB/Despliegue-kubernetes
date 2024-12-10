@@ -1,14 +1,1 @@
-getHealth()
-async function getHealth () {
-  try {
-    await fetch('/health')
-        .then(response => {
-          console.log(response.status)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-  } catch (err) {
-      console.log(err)
-  }
-}
+console.log("HTTP/1.1 200 OK")
