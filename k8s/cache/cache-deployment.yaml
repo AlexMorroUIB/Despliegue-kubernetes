@@ -27,3 +27,9 @@ spec:
         env:
           - name: REDIS_1_HOST
             value: "127.0.0.1"
+      initContainers:
+        - name: redis-exporter
+          image: bitnami/redis-exporter
+          restartPolicy: Always
+          ports:
+            - containerPort: 9121

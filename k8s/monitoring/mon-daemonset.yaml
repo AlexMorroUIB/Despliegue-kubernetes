@@ -15,6 +15,7 @@ spec:
       labels:
         app: monitoring
     spec:
+      serviceAccountName: monitoring-serviceaccount
       containers:
         - name: prometheus
           image: prom/prometheus
@@ -32,6 +33,28 @@ spec:
           volumeMounts:
             - name: prometheus-config-volume
               mountPath: /etc/prometheus/
+        - name: loki
+          image: docker.io/grafana/loki
+          ports:
+            - containerPort: 3100
+        - name: promtail-container
+          image: grafana/promtail
+          args:
+            - -config.file=/etc/promtail/promtail.yaml
+            - -config.expand-env=true
+          env:
+            - name: 'HOSTNAME' # needed when using kubernetes_sd_configs
+              valueFrom:
+                fieldRef:
+                  fieldPath: 'spec.nodeName'
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log
+            - name: promtail-config
+              mountPath: /etc/promtail
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
         - name: grafana
           image: grafana/grafana
           env:
@@ -63,6 +86,9 @@ spec:
                 path: prometheus-conf.yml
               - key: alert-rules.yml
                 path: alert-rules.yml
+        - name: promtail-config
+          configMap:
+            name: promtail-configmap
         - name: grafana-provisioning
           configMap:
             name: grafana-configmap
@@ -83,3 +109,9 @@ spec:
             items:
               - key: alertmanager-conf.yml
                 path: alertmanager.yml
+        - name: logs
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
