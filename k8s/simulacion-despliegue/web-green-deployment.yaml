@@ -5,16 +5,16 @@ metadata:
   name: webapp-green-deployment
   namespace: webapp-ns
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: webapp
-      env: green
+      color: green
   template:
     metadata:
       labels:
         app: webapp
-        env: green
+        color: green
     spec:
       containers:
         - name: webapp-canary

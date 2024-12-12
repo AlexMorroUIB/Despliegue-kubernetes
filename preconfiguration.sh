@@ -23,4 +23,4 @@ kubectl create -f ./k8s/roles-monitoring.yaml
 # Crea la imagen de la webapp
 echo "Creando la imagen de la aplicación web..."
 cd WebApp
-minikube image build -t webapp:latest .
+minikube image build -t webapp:1.5 .

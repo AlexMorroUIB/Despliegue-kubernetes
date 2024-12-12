@@ -42,7 +42,7 @@ Los diferentes servicios son una aplicación web, una base de datos, una caché,
    5. Crear el rol para la monitorización.
        - `kubectl create -f ./k8s/roles-monitoring.yaml`
    6. Hacer el build de la imagen de la aplicación web desde dentro de la carpeta `WebApp`.
-       - `minikube image build -t webapp:latest .`
+       - `minikube image build -t webapp:1.5 .`
 5. En una terminal ejecutar el comando `minikube tunnel`.
 6. En otra terminal añadir la carpeta shared al cluster con el comando `minikube mount ./shared:/shared`
 7. Para desplegar el sistema ejecutar el script `apply-all-k8s-objects.sh` o los siguientes comandos:

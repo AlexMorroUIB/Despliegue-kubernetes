@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: webapp:latest
+          image: webapp:1.5
           imagePullPolicy: Never
           ports:
             - containerPort: 80
@@ -42,6 +42,18 @@ spec:
                   key: password
             - name: REDIS_HOST
               value: cache-service.cache-ns.svc.cluster.local
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
       initContainers:
         - name: blackbox-exporter
           image: quay.io/prometheus/blackbox-exporter
