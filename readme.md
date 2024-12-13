@@ -7,11 +7,11 @@ Contienes las siguientes configuraciones de alta disponibilidad:
 * El ReplicaSet de k8s se encarga de reiniciar los pods o levantar pods nuevos en caso de fallo o eliminación.
 
 Además, se ha agregado un pipeline de CI/CD mediante GitHub Actions, aunque por no poder acceder al cloud no se aplican los cambios, hay que hacerlo manualmente. En la fase de `Deploy` de GitHub Actions, se describen los pasos para desplegar la nueva versión.<br>
-Para desplegar la neva versión, a parte de poder desplegarla directamente, se pueden usar los scripts de simulación de despliege: `bluegreen-deploy.sh` y `canary-deploy.sh`. Los cuales muestran por pantalla las acciones que se van realizando.
+Para desplegar la neva versión, a parte de poder desplegarla directamente, se pueden usar los scripts de simulación de despliege: `bluegreen-deploy.sh` y `canary-deploy.sh`. Los cuales muestran por pantalla las acciones que se van realizando o los cambios que hay que realizar para que se lleve a cabo de manera correcta.
 
 ![infraestructura-k8s.png](infraestructura-k8s.png)
 
-## Despliegue de entornos
+## Despliegue de la infraestructura
 1. Iniciar el cluster de k8s usando el comando `minikube start`.
 2. Habilitar la exposición de ingress de minikube hacia localhost.
    - `minikube addons enable ingress`
@@ -27,7 +27,7 @@ Para desplegar la neva versión, a parte de poder desplegarla directamente, se p
      ```
 4. Ejecutar el script `preconfiguration.sh` o seguir los siguientes pasos:
    1. Crear los namespaces.
-           - `kubectl create -f ./k8s/namespaces.yaml`
+       - `kubectl create -f ./k8s/namespaces.yaml`
    2. Añadir los configmaps de los archivos de configuración.
        - ```
            kubectl create configmap db-configmap --from-file=./conf-files/init.sql --from-file=./conf-files/monitoring/prometheus/mysql-exporter.my-cnf -n database-ns
