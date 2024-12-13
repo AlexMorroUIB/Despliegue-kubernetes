@@ -9,10 +9,12 @@ spec:
   selector:
     matchLabels:
       app: webapp
+      color: blue
   template:
     metadata:
       labels:
         app: webapp
+        color: blue
     spec:
       containers:
         - name: webapp-canary

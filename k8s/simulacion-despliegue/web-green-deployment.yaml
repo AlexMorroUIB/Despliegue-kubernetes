@@ -17,7 +17,7 @@ spec:
         color: green
     spec:
       containers:
-        - name: webapp-canary
+        - name: webapp-green
           image: webapp:latest
           imagePullPolicy: Never
           ports:

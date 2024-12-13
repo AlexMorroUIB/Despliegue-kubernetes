@@ -13,7 +13,7 @@ async function getInstancia () {
     await fetch('/getInstancia')
       .then(response => response.json())
       .then(data => {
-        titulo.innerHTML = 'Web app in docker | Contenedor ' + data.numero
+        titulo.innerHTML += ' | Contenedor ' + data.numero
       })
       .catch(err => {
         console.log(err)
