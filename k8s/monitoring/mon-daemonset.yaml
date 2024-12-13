@@ -97,6 +97,8 @@ spec:
                 path: dashboards/all-dashboards.yml
               - key: datasources.yaml
                 path: datasources/all-dashboards.yml
+              - key: alerts.yaml
+                path: alerting/alerts.yml
         - name: grafana-dashboards
           configMap:
             name: grafana-configmap
